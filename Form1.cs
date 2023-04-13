@@ -16,6 +16,22 @@ namespace MusicPlayer
         public Form1()
         {
             InitializeComponent();
+            InitBrowser();
+            this.Resize += new System.EventHandler(this.Form_Resize);
+
+            webView21.CoreWebView2InitializationCompleted += OnWebViewInitializationComplete;
+        }
+
+        public void OnWebViewInitializationComplete(object sender, EventArgs e) 
+        {
+            webView21.CoreWebView2.SourceChanged += CoreWebView2_SourceChanged;
+            webView21.CoreWebView2.Settings.IsStatusBarEnabled = false;
+        }
+
+        private void Form_Resize(object sender, EventArgs e)
+        {
+            webView21.Size = this.ClientSize - new System.Drawing.Size(webView21.Location);
+
         }
 
         private async Task initialize()
@@ -25,7 +41,6 @@ namespace MusicPlayer
         public async void InitBrowser()
         {
             await initialize();
-            webView21.CoreWebView2.Navigate("https://www.youtube.com/");
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -106,14 +121,26 @@ namespace MusicPlayer
             int rowClicked = dataGridView.CurrentRow.Index;
             //MessageBox.Show($"You clicked row {rowClicked}");
             String videoURL = dataGridView.Rows[rowClicked].Cells[4].Value.ToString();
-            webView21.NavigateToString(videoURL);
+            if (webView21 != null && webView21.CoreWebView2 != null)
+            {
+                webView21.CoreWebView2.SourceChanged += CoreWebView2_SourceChanged;
+            }
         }
 
-        /*void webBrowser_Navigating(object sender, CoreWebView2NavigationStartingEventArgs e, string videoURL)
+        private void CoreWebView2_SourceChanged(object sender, CoreWebView2SourceChangedEventArgs e)
         {
+            DataGridView dataGridView = (DataGridView)sender;
+            int rowClicked = dataGridView.CurrentRow.Index;
+            //MessageBox.Show($"You clicked row {rowClicked}");
+            String videoURL = dataGridView.Rows[rowClicked].Cells[4].Value.ToString();
+            webView21.Source = new Uri(videoURL);
+            webView21.CoreWebView2.NavigateToString(videoURL);
+        }
 
-            webView21.Source = videoURL;
-        }*/
-        //TODO: find out why navigating doesn't work
+        /*private void NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+        {
+            webView21.
+        }
+        //TODO: find out why navigating doesn't work*/
     }
 }

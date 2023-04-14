@@ -1,9 +1,4 @@
-using Microsoft.Web.WebView2.WinForms;
 using Microsoft.Web.WebView2.Core;
-using Microsoft.Web.WebView2;
-
-using System.Windows.Forms;
-using Microsoft.Web.WebView2.Wpf;
 
 namespace MusicPlayer
 {
@@ -18,11 +13,15 @@ namespace MusicPlayer
         {
             InitializeComponent();
             InitBrowser();
+            button1.FlatAppearance.BorderColor = Color.DarkSlateBlue;
+            button2.FlatAppearance.BorderColor = Color.DarkSlateBlue;
+            button3.FlatAppearance.BorderColor = Color.DarkSlateBlue;
+            button4.FlatAppearance.BorderColor = Color.DarkSlateBlue;
             this.Resize += new EventHandler(this.Form_Resize);
         }
         private void Form_Resize(object sender, EventArgs e)
         {
-            webView21.Size = this.ClientSize - new System.Drawing.Size(webView21.Location);
+            webView21.Size = this.ClientSize - new Size(webView21.Location);
 
         }
 

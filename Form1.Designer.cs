@@ -246,6 +246,7 @@
             // webView21
             // 
             webView21.AllowExternalDrop = true;
+            webView21.CausesValidation = false;
             webView21.CreationProperties = null;
             webView21.DefaultBackgroundColor = Color.White;
             webView21.Location = new Point(1151, 435);
@@ -253,7 +254,7 @@
             webView21.Size = new Size(531, 343);
             webView21.Source = new Uri("https://www.youtube.com/", UriKind.Absolute);
             webView21.TabIndex = 11;
-            webView21.ZoomFactor = 1D;
+            webView21.ZoomFactor = 0.75D;
             // 
             // Form1
             // 

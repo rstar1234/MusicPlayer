@@ -1,5 +1,6 @@
 using Microsoft.Web.WebView2.WinForms;
 using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2;
 
 using System.Windows.Forms;
 using Microsoft.Web.WebView2.Wpf;
@@ -17,17 +18,8 @@ namespace MusicPlayer
         {
             InitializeComponent();
             InitBrowser();
-            this.Resize += new System.EventHandler(this.Form_Resize);
-
-            webView21.CoreWebView2InitializationCompleted += OnWebViewInitializationComplete;
+            this.Resize += new EventHandler(this.Form_Resize);
         }
-
-        public void OnWebViewInitializationComplete(object sender, EventArgs e) 
-        {
-            webView21.CoreWebView2.SourceChanged += CoreWebView2_SourceChanged;
-            webView21.CoreWebView2.Settings.IsStatusBarEnabled = false;
-        }
-
         private void Form_Resize(object sender, EventArgs e)
         {
             webView21.Size = this.ClientSize - new System.Drawing.Size(webView21.Location);
@@ -52,6 +44,7 @@ namespace MusicPlayer
             //connect the list to the grid view control
             albumBindingSource.DataSource = albums;
             dataGridView1.DataSource = albumBindingSource;
+            //dataGridView2.DataSource = tracksBindingSource;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -60,7 +53,6 @@ namespace MusicPlayer
 
             //connect the list to the grid view control
             albumBindingSource.DataSource = albumsDAO.SearchTitles(textBox1.Text);
-            dataGridView1.DataSource = albumBindingSource;
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -117,30 +109,18 @@ namespace MusicPlayer
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            DataGridView dataGridView = (DataGridView)sender;
-            int rowClicked = dataGridView.CurrentRow.Index;
+            DataGridView dataGridView2 = (DataGridView)sender;
+            int rowClicked = dataGridView2.CurrentRow.Index;
             //MessageBox.Show($"You clicked row {rowClicked}");
-            String videoURL = dataGridView.Rows[rowClicked].Cells[4].Value.ToString();
+            String videoURL = dataGridView2.Rows[rowClicked].Cells[4].Value.ToString();
             if (webView21 != null && webView21.CoreWebView2 != null)
             {
-                webView21.CoreWebView2.SourceChanged += CoreWebView2_SourceChanged;
+                webView21.CoreWebView2.Navigate(videoURL);
             }
         }
-
-        private void CoreWebView2_SourceChanged(object sender, CoreWebView2SourceChangedEventArgs e)
+        private void NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
-            DataGridView dataGridView = (DataGridView)sender;
-            int rowClicked = dataGridView.CurrentRow.Index;
-            //MessageBox.Show($"You clicked row {rowClicked}");
-            String videoURL = dataGridView.Rows[rowClicked].Cells[4].Value.ToString();
-            webView21.Source = new Uri(videoURL);
-            webView21.CoreWebView2.NavigateToString(videoURL);
+            webView21.Reload();
         }
-
-        /*private void NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
-        {
-            webView21.
-        }
-        //TODO: find out why navigating doesn't work*/
     }
 }

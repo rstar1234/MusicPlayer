@@ -9,12 +9,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace MusicPlayer
 {
     internal class AlbumsDAO
     {
-        string connectionString = "datasource=localhost;port=3306;username=root;password=root;database=music;";
+        static string connectionStringFile = ConfigurationManager.AppSettings["ConnectionStringFile"];
+        static string connectionStringFileLocation =
+            Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName;
+        static string connectionStringFileFullPath = connectionStringFileLocation + "//" + connectionStringFile;
+        static StreamReader connectionStringStream = new StreamReader(connectionStringFileFullPath);
+        string connectionString = connectionStringStream.ReadLine();
         public List<Album> getAllAlbums()
         {
             List<Album> returnTheseAlbums = new List<Album>();
